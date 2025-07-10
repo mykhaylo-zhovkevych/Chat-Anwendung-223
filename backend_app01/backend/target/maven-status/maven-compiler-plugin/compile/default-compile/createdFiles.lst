@@ -1,0 +1,16 @@
+com\chat\controller\ChatController.class
+com\chat\entity\Users.class
+com\chat\configuration\JwtFilter.class
+com\chat\model\Status.class
+com\chat\model\LoginRequest.class
+com\chat\entity\ChatMessage.class
+com\chat\model\UserDto.class
+com\chat\repository\UserRepository.class
+com\chat\model\Message.class
+com\chat\configuration\JwtUtil.class
+com\chat\configuration\WebSocketConfig.class
+com\chat\ChatApplication.class
+com\chat\service\UserService.class
+com\chat\configuration\SecurityConfig.class
+com\chat\configuration\WebConfig.class
+com\chat\repository\ChatMessageRepository.class

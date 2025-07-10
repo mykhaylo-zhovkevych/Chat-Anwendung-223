@@ -1,0 +1,16 @@
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\entity\ChatMessage.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\service\UserService.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\configuration\WebConfig.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\model\Status.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\controller\ChatController.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\repository\UserRepository.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\configuration\JwtFilter.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\configuration\WebSocketConfig.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\repository\ChatMessageRepository.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\entity\Users.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\configuration\JwtUtil.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\model\LoginRequest.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\model\Message.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\model\UserDto.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\ChatApplication.java
+C:\Users\mzovk\git\Chat-Anwendung-223\backend_app01\Back-end\src\main\java\com\chat\configuration\SecurityConfig.java
