@@ -297,6 +297,29 @@ In Backend habe ich zwei Testfälle gemacht:
 1. login_Successful, Ob der Login mit gültigen Benutzerdaten funktioniert. Moch für User Erstellung, dann wird eine Login Anfrage erstellt, am Ende wird getestet, ob dieser Session der Benutzer richtig gespeichert.
 2. findByUsername_UserNotFound, Es wird getestet, was passiert, wenn nach einem Benutzer gesucht wird, der **nicht existiert** (z. B. „unknown“).  Am Ende wird geprüft: Ob der HTTP-Status 404 zurückgegeben wird, was bedeutet: Benutzer wurde nicht gefunden.
 
+``` test
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.chat.ChatControllerTest
+WARNING: A Java agent has been loaded dynamically (C:\Users\mzovk\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.17\byte-buddy-agent-1.14.17.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.333 s -- in com.chat.ChatControllerTest
+
+Results:
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+
+------------------------------------------------------------------------
+BUILD SUCCESS
+------------------------------------------------------------------------
+Total time:  4.994 s
+Finished at: 2025-07-10T09:33:27+02:00
+------------------------------------------------------------------------
+```
 
 Für die Deployment habe ich zwei Dockerfile erstellt und eine dockerfile-compose, der alles bindet. 
 ``` Dockerfile
