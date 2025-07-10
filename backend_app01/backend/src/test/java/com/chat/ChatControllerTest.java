@@ -16,7 +16,6 @@ import com.chat.entity.Users;
 import com.chat.model.LoginRequest;
 import com.chat.repository.UserRepository;
 import com.chat.service.UserService;
-import com.chat.repossitory.UserRepository;
 
 public class ChatControllerTest {
 
