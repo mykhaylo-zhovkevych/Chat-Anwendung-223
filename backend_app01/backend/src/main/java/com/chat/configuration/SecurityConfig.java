@@ -6,6 +6,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.Customizer;
 
 /**
  * Konfiguriert die Sicherheitsregeln für die Webanwendung.
@@ -40,9 +41,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf().disable()
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                    // Öffentliche Endpunkte
                     .requestMatchers(
                         "/api/users/login",
                         "/api/users/jwt-login",
@@ -51,10 +52,9 @@ public class SecurityConfig {
                         "/api/users/history/**",
                         "/ws/**"
                     ).permitAll()
-                    // Gesicherte Endpunkte erfordern JWT
                     .requestMatchers("/api/secure/**").authenticated()
+                    .anyRequest().permitAll() // optional, aber verhindert "unmatched" 403
                 )
-                // JWT-Filter vor UsernamePasswordAuthenticationFilter einfügen
                 .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

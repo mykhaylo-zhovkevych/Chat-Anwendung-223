@@ -2,6 +2,7 @@ package com.chat.service;
 
 import com.chat.entity.Users;
 import com.chat.repository.UserRepository;
+import com.chat.configuration.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,17 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
+    public Users authenticate(String username, String password) {
+        Users user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("Invalid password");
+        }
+        return user;
+    }
+
     /**
      * Findet einen Benutzer anhand seines Benutzernamens.
      *
@@ -51,5 +63,11 @@ public class UserService {
      */
     public Users findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+
+    public String authenticateAndGenerateToken(String username, String password) {
+        Users user = authenticate(username, password);
+        return JwtUtil.generateToken(user.getUsername());
     }
 }

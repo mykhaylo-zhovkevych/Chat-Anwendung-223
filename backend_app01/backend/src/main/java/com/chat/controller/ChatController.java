@@ -16,9 +16,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import com.chat.configuration.JwtUtil;
-
 import java.util.Map; 
 
 import java.util.List;
@@ -37,11 +34,8 @@ import com.chat.entity.Users;
 public class ChatController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final UserRepository userRepository;
     private final ChatMessageRepository chatMessageRepository;
-
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * Führt die Benutzeranmeldung durch.
@@ -52,17 +46,19 @@ public class ChatController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
-        Users user = userRepository.findByUsername(loginRequest.getUsername());
-        if (user == null) {
-            return ResponseEntity.status(404).body("User not found");
+        try {
+            Users user = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
+            session.setAttribute("user", user);
+            return ResponseEntity.ok("Login successful");
+        } catch (RuntimeException ex) {
+            if ("User not found".equals(ex.getMessage())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+            if ("Invalid password".equals(ex.getMessage())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-
-        if (!user.getPassword().equals(loginRequest.getPassword())) {
-            return ResponseEntity.status(401).body("Invalid password");
-        }
-
-        session.setAttribute("user", user);
-        return ResponseEntity.ok("Login successful");
     }
 
     /**
@@ -100,13 +96,17 @@ public class ChatController {
      */
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UserDto userDto) {
-        Users user = new Users();
-        user.setUsername(userDto.getUsername());
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        userRepository.save(user);
-        return ResponseEntity.ok("User created successfully");
+        try {
+            userService.signUpUser(
+                    userDto.getUsername(),
+                    userDto.getName(),
+                    userDto.getEmail(),
+                    userDto.getPassword()
+            );
+            return ResponseEntity.ok("User created successfully");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     /**
@@ -164,13 +164,15 @@ public class ChatController {
      */
     @PostMapping("/jwt-login")
     public ResponseEntity<?> jwtLogin(@RequestBody LoginRequest loginRequest) {
-        Users user = userRepository.findByUsername(loginRequest.getUsername());
-        if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
+        try {
+            String token = userService.authenticateAndGenerateToken(
+                    loginRequest.getUsername(),
+                    loginRequest.getPassword()
+            );
+            return ResponseEntity.ok(Map.of("token", token));
+        } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Falsche Anmeldedaten");
         }
-
-        String token = JwtUtil.generateToken(user.getUsername());
-        return ResponseEntity.ok(Map.of("token", token));
     }
 
     /**
