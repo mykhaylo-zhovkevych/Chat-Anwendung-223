@@ -110,48 +110,6 @@ Besonders das Zusammenspiel von Frontend und WebSocket war eine spannende Heraus
 5. **Als Nutzer möchte ich auf vergangene private Chats zugreifen können**,  
     damit ich ältere Unterhaltungen einsehen kann.  
     **Akzeptanzkriterium:** Frühere Chatverläufe zwischen zwei Nutzern sind abrufbar und chronologisch sortiert.
-
-
-
-#### Ein paar Worte zu den Transaktionen und dem Archetekut der Anwendung 
--  In dieser Anwendung wird jede Interaktion zwischen Benutzern als Transaktion betrachtet, und was die Backend-Architektur betrifft: 
-###### Welche Architekturform nutzt du?
-
-- Dein Backend ist eine **klassische mehrschichtige Architektur** (Layered Architecture).
-- Dein Frontend ist eine **Single-Page Application (SPA)** mit Next.js, die über APIs mit dem Backend kommuniziert.
-- Zwischen Frontend und Backend läuft die Kommunikation via REST-API und WebSocket.
-
-
- Die Grundidee der Schichten in Backend:
-
-- **Präsentationsschicht (Controller)**: Diese Schicht ist für den Empfang von Anfragen zuständig, z. B. wenn dein Next.js-Frontend eine HTTP-Anfrage (REST-API) oder eine WebSocket-Nachricht sendet. Der Controller nimmt die Anfrage entgegen, leitet sie weiter und gibt die Antwort zurück.
-- **Geschäftsschicht (Service)**: Hier passiert die eigentliche „Logik“ deiner Anwendung – also Regeln, Berechnungen oder das Steuern von Abläufen. Du hältst die Logik vom Controller getrennt, damit die Präsentation (z. B. Web-Frontend) unabhängig von der Business-Logik bleibt.
-- **Datenzugriffsschicht (Repository)**: Diese Schicht ist für die Kommunikation mit der Datenbank zuständig. Du benutzt z. B. JPA-Repositorys, um Daten zu speichern, zu suchen oder zu löschen. Der Service fragt diese Schicht an, wenn er Daten braucht oder speichern will.
-- **Domänenschicht (Entity/Model)**: Das sind die Datenmodelle meiner Anwendung, also die Klassen, die deine Datenstruktur repräsentieren (z. B. User oder ChatMessage). Diese Klassen entsprechen typischerweise den Datenbanktabellen.
-
-Mein Frontend gliedert sich in folgende Bereiche:
-
-- **UI-Komponenten**  
-    Du baust viele wiederverwendbare Komponenten (z. B. Login-Formular, Chatfenster, Suchleiste). Diese Komponenten kapseln Darstellung und Interaktion und sind modular, damit du sie einfach an verschiedenen Stellen einsetzen kannst.
-- **Seiten (Pages)**  
-    In Next.js repräsentieren Seiten die einzelnen Routen deiner Anwendung, z. B. die Login-Seite, die Chat-Seite oder die Startseite. Next.js sorgt automatisch dafür, dass diese URLs zur passenden Komponente führen.
-- **State Management**  
-    Der Zustand (State) deiner Anwendung – z. B. wer gerade eingeloggt ist, welche Nachrichten angezeigt werden oder welcher User ausgewählt ist – wird in React-Hooks wie `useState`, `useEffect` oder Context verwaltet. Das ermöglicht reaktive Updates der UI, wenn sich Daten ändern.
-- **API-Kommunikation**  
-    Deine Frontend-Komponenten kommunizieren mit dem Backend über REST-APIs (z. B. Login, Benutzerregistrierung) und WebSockets (für den Echtzeit-Chat). Hierfür nutzt du Bibliotheken wie `axios` für HTTP-Anfragen und `stompjs` / `sockjs-client` für WebSocket-Verbindungen.
-- **Routing und Navigation**  
-    Next.js übernimmt das Routing (Wechsel zwischen Seiten) automatisch. Du kannst z. B. nach erfolgreichem Login mit dem Router zur Chat-Seite navigieren. Auch dynamische Routen (z. B. Chat mit verschiedenen Usern) sind einfach realisierbar.
-- **Client-seitige Logik**  
-    Funktionen wie das Verarbeiten von Benutzereingaben, Absenden von Nachrichten oder das Verwalten von WebSocket-Verbindungen sind in React-Komponenten oder eigenen Hooks gekapselt.
-
-Die Frontend Architektur folgt einer **Component-Based Architecture** mit dem SPA-Prinzip:
-
-- **Komponenten als Bausteine**: Die UI ist in kleine, gut wiederverwendbare Einheiten zerlegt, die jeweils nur für ihre eigene Darstellung und Logik verantwortlich sind.
-- **Reaktive Datenflüsse**: Wenn sich Zustände ändern (z. B. neue Chat-Nachricht), aktualisiert React automatisch die Darstellung.
-- **Trennung von Darstellung und Daten**: Die API-Aufrufe und WebSocket-Verbindungen sind klar getrennt von der UI, sodass die Komponenten nur ihre Daten bekommen und anzeigen müssen.
-- **Unidirektionaler Datenfluss**: Daten fliessen meist von oben nach unten (Parent zu Child), was die Kontrolle und Vorhersagbarkeit der Anwendung erhöht.
-
-
 ---
 
 ####  **Teil 1: Auswertung mit Soll-Ist-Vergleich & Problemanalyse**
@@ -181,12 +139,12 @@ Was wurde erreicht? Was funktioniert?
 ---
 
 #####  **3. Problemanalyse**
-
 Was ist die Ursache für Abweichungen?
+1. Technische Komplexität
+Aber in praxis es kann ich sein:
+1. Unklare oder wechselnde Anforderungen (Requirements)
+2. Menschliche Faktoren & Ressourcen
 
-- ❌ WebSocket-Verzögerung: evtl. durch fehlendes Caching oder langsame Verbindungen(sher ).
-    
-- ❌ Docker-Probleme: Spring Boot greift auf `localhost` zu, statt auf Service-Namen (`mysql_db`) und umgekehrt. (wenn die App in config falschen Variable hat)
 
 ##### ✅ **Teil 2: Sicherheitskonzept dokumentieren**
 
@@ -199,12 +157,12 @@ Ein **Sicherheitskonzept** enthält Massnahmen auf verschiedenen Ebenen. Hier is
 - **Risiko**: JWT kann abgefangen werden → HTTPS dringend erforderlich 
     
 
-##### 🔒 **2. Datenbankzugriff**
+##### **2. Datenbankzugriff**
 
 - MySQL ist mit Nutzer `bank` und Passwort `bank` gesichert
 -  **Meine Empfehlung**: sichere Passwörter + Zugriff nur aus Docker-Netzwerk erlauben.
 
-##### 🔒 **3. Netzwerk & Kommunikation**
+##### **3. Netzwerk & Kommunikation**
 
 - **Meine Empfehlung**:
     
@@ -212,7 +170,7 @@ Ein **Sicherheitskonzept** enthält Massnahmen auf verschiedenen Ebenen. Hier is
     - WebSocket ebenfalls mit `wss://` nutzen
     - In Docker nur nötige Ports freigeben
 
-##### 🔒 **4. Validierung & Fehlerbehandlung**
+##### **4. Validierung & Fehlerbehandlung**
 
 - Aktuell:
     
@@ -375,7 +333,7 @@ Meiner Meinung nach ist das Projekt noch nicht vollständig abgeschlossen. Ich p
 JWT - Authentifizierung
 ### 🔐 1. Benutzer meldet sich über das Frontend an
 
-In deiner Funktion `handleJwtLogin()` im Frontend: Du schickst **Username und Passwort** im Body an `POST /api/users/jwt-login`.
+In Funktion `handleJwtLogin()` im Frontend: Wird es **Username und Passwort** im Body an `POST /api/users/jwt-login` geschickt.
 
 ###### 2. Der Server prüft die Zugangsdaten
 
@@ -403,7 +361,6 @@ Bei weiteren API-Anfragen, die geschützt sind, wird der Token im HTTP-Header `A
 ``` makefile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
-Bei weiteren API-Anfragen, die geschützt sind, wird der Token im HTTP-Header `Authorization` mitgeschickt
 
 ### 🔐 Unterschied zwischen JWT-Authentifizierung und normaler Session:
 
@@ -415,3 +372,4 @@ Bei weiteren API-Anfragen, die geschützt sind, wird der Token im HTTP-Header `A
 | Skalierbarkeit  | Weniger skalierbar, da Server Session-Management benötigt                                     | Sehr gut skalierbar, da keine Sessions gespeichert werden müssen                       |
 | Sicherheit      | Sessions sind sicher, da Token nicht clientseitig lesbar, aber anfällig für Session-Hijacking | JWT kann gelesen werden, deshalb wichtig: HTTPS, kurze Ablaufzeit, Signaturprüfung     |
 | Ablauf / Logout | Session kann serverseitig invalidiert werden                                                  | Token läuft meist nach Ablauf automatisch ab, Logout muss clientseitig gelöscht werden |
+
